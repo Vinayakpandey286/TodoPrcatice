@@ -1,10 +1,12 @@
 const express = require('express')
+const cors = require("cors")
 const app = express()
 const PORT = 5000
 const { createTodo, updateTodo } = require('./types')
 const { todo } = require('./db')
 
 app.use(express.json())
+app.use(cors())
 
 app.post('/todo', async (req, res) => {
     const createPayload = req.body
@@ -32,16 +34,19 @@ app.get('/todos', async (req, res) => {
 })
 app.put('/completed', async (req, res) => {
     const parsedId = updateTodo.safeParse(req.body)
+    console.log(req.body, parsedId)
     if (!parsedId.success) {
         res.status(411).json({
             msg: "wrong inputs"
         })
     }
 
-    await todo.update({
+    await todo.updateOne({
         _id: req.body.id
     }, {
-        completed: true
+        $set: {
+            completed: true
+        }
     })
     res.status(200).json({
         msg: "todo marked as completed"
