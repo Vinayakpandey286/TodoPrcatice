@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-mongoose.connect('mongodb+srv://vinayakpandey286:Pandey!!28@cluster0.6ip89gu.mongodb.net/todo')
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URI)
 
 const todoSchema = mongoose.Schema({
     title: {
